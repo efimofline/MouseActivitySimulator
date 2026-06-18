@@ -16,7 +16,6 @@
 		AA000025 /* SimulationViewModel.swift in Sources */     = {isa = PBXBuildFile; fileRef = AA00001C /* SimulationViewModel.swift */; };
 		AA000026 /* ContentView.swift in Sources */             = {isa = PBXBuildFile; fileRef = AA00001D /* ContentView.swift */; };
 		AA000027 /* PermissionView.swift in Sources */          = {isa = PBXBuildFile; fileRef = AA00001E /* PermissionView.swift */; };
-		AA000029 /* Carbon.framework in Frameworks */           = {isa = PBXBuildFile; fileRef = AA000028 /* Carbon.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +31,6 @@
 		AA00001C /* SimulationViewModel.swift */      = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationViewModel.swift; sourceTree = "<group>"; };
 		AA00001D /* ContentView.swift */              = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AA00001E /* PermissionView.swift */           = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionView.swift; sourceTree = "<group>"; };
-		AA000028 /* Carbon.framework */               = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,7 +38,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA000029 /* Carbon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,7 +114,6 @@
 		AA00002A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AA000028 /* Carbon.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

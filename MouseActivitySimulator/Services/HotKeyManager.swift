@@ -1,8 +1,9 @@
-import Carbon.HIToolbox
+import CoreGraphics
 import AppKit
 
-/// Registers global hotkeys via the Carbon Event Manager.
-/// Works system-wide regardless of which app is in front.
+/// Registers global hotkeys using CGEventTap.
+/// Requires Accessibility permission — the same permission we already request
+/// for mouse simulation, so no extra setup is needed.
 ///
 /// Registered shortcuts:
 ///   ⌃⌥⌘S  — Start simulation
@@ -12,15 +13,12 @@ import AppKit
 final class HotKeyManager {
 
     private weak var viewModel: SimulationViewModel?
+    private var eventTap:     CFMachPort?
+    private var runLoopSource: CFRunLoopSource?
 
-    private var hotKeyRefs:      [EventHotKeyRef] = []
-    private var eventHandlerRef: EventHandlerRef?
-
-    // Unique 4-char signature for this app's hotkeys ('MASI')
-    private let kSig: OSType = 0x4D415349
-
-    private enum Action: UInt32 {
-        case start = 1, stop, pause, reset
+    // Virtual key codes (US layout, same as kVK_ANSI_* from HIToolbox)
+    private enum Key: Int64 {
+        case s = 1, x = 7, p = 35, r = 15
     }
 
     init(viewModel: SimulationViewModel) {
@@ -30,76 +28,80 @@ final class HotKeyManager {
     // MARK: - Public
 
     func register() {
-        installCarbonHandler()
+        guard AXIsProcessTrusted() else {
+            print("[HotKeyManager] Accessibility not granted — hotkeys disabled")
+            return
+        }
 
-        let mods = UInt32(controlKey | optionKey | cmdKey)
-        registerKey(vk: UInt32(kVK_ANSI_S), mods: mods, action: .start)
-        registerKey(vk: UInt32(kVK_ANSI_X), mods: mods, action: .stop)
-        registerKey(vk: UInt32(kVK_ANSI_P), mods: mods, action: .pause)
-        registerKey(vk: UInt32(kVK_ANSI_R), mods: mods, action: .reset)
+        let mask = CGEventMask(1 << CGEventType.keyDown.rawValue)
+
+        // Pass self as unretained userInfo — safe because HotKeyManager lives
+        // for the entire app lifetime (retained by AppDelegate).
+        let ctx = Unmanaged.passUnretained(self).toOpaque()
+
+        // The callback must be a @convention(c) closure with no captures from
+        // the enclosing scope; we thread context through the userInfo pointer.
+        eventTap = CGEvent.tapCreate(
+            tap:              .cgSessionEventTap,
+            place:            .headInsertEventTap,
+            options:          .listenOnly,           // observe, don't swallow
+            eventsOfInterest: mask,
+            callback: { (_, type, event, userInfo) -> Unmanaged<CGEvent>? in
+                guard let event,
+                      let userInfo,
+                      type == .keyDown else {
+                    return event.map(Unmanaged.passRetained)
+                }
+
+                // Require exactly ⌃⌥⌘ (no Shift)
+                let f = event.flags
+                guard f.contains(.maskControl),
+                      f.contains(.maskAlternate),
+                      f.contains(.maskCommand),
+                      !f.contains(.maskShift) else {
+                    return Unmanaged.passRetained(event)
+                }
+
+                let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
+                let mgr = Unmanaged<HotKeyManager>.fromOpaque(userInfo)
+                                                   .takeUnretainedValue()
+                DispatchQueue.main.async { mgr.dispatch(keyCode: keyCode) }
+                return Unmanaged.passRetained(event)
+            },
+            userInfo: ctx
+        )
+
+        guard let tap = eventTap else {
+            print("[HotKeyManager] CGEventTap creation failed")
+            return
+        }
+
+        runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0)
+        CFRunLoopAddSource(CFRunLoopGetMain(), runLoopSource, .commonModes)
+        CGEvent.tapEnable(tap: tap, enable: true)
+        print("[HotKeyManager] Registered ⌃⌥⌘ S/X/P/R via CGEventTap")
     }
 
     func unregister() {
-        hotKeyRefs.forEach { UnregisterEventHotKey($0) }
-        hotKeyRefs.removeAll()
-        if let h = eventHandlerRef { RemoveEventHandler(h); eventHandlerRef = nil }
+        if let tap = eventTap {
+            CGEvent.tapEnable(tap: tap, enable: false)
+        }
+        if let src = runLoopSource {
+            CFRunLoopRemoveSource(CFRunLoopGetMain(), src, .commonModes)
+        }
+        eventTap      = nil
+        runLoopSource = nil
     }
 
     // MARK: - Private
 
-    private func registerKey(vk: UInt32, mods: UInt32, action: Action) {
-        var hkID = EventHotKeyID(signature: kSig, id: action.rawValue)
-        var ref:  EventHotKeyRef?
-        if RegisterEventHotKey(vk, mods, hkID, GetApplicationEventTarget(), 0, &ref) == noErr,
-           let ref {
-            hotKeyRefs.append(ref)
-        }
-    }
-
-    private func installCarbonHandler() {
-        var spec = EventTypeSpec(
-            eventClass: OSType(kEventClassKeyboard),
-            eventKind:  UInt32(kEventHotKeyPressed)
-        )
-
-        // Passed as userData — must not form a strong cycle; HotKeyManager
-        // is retained by AppDelegate for the app's lifetime, so passUnretained is safe.
-        let ctx = Unmanaged.passUnretained(self).toOpaque()
-
-        InstallApplicationEventHandler(
-            { (_, event, userData) -> OSStatus in
-                guard let event, let userData else { return OSStatus(eventNotHandledErr) }
-
-                var hkID = EventHotKeyID()
-                guard GetEventParameter(
-                    event,
-                    EventParamName(kEventParamDirectObject),
-                    EventParamType(typeEventHotKeyID),
-                    nil,
-                    MemoryLayout<EventHotKeyID>.size,
-                    nil,
-                    &hkID
-                ) == noErr else { return OSStatus(eventNotHandledErr) }
-
-                let mgr = Unmanaged<HotKeyManager>.fromOpaque(userData).takeUnretainedValue()
-                DispatchQueue.main.async { mgr.dispatch(id: hkID.id) }
-                return noErr
-            },
-            GetApplicationEventTarget(),
-            1,
-            &spec,
-            ctx,
-            &eventHandlerRef
-        )
-    }
-
-    private func dispatch(id: UInt32) {
-        switch Action(rawValue: id) {
-        case .start: viewModel?.startSimulation()
-        case .stop:  viewModel?.stopSimulation()
-        case .pause: viewModel?.togglePause()
-        case .reset: viewModel?.resetStats()
-        case .none:  break
+    private func dispatch(keyCode: Int64) {
+        switch Key(rawValue: keyCode) {
+        case .s: viewModel?.startSimulation()
+        case .x: viewModel?.stopSimulation()
+        case .p: viewModel?.togglePause()
+        case .r: viewModel?.resetStats()
+        case nil: break
         }
     }
 

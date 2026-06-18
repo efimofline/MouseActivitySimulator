@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 /// Root view — routes to the permission screen or the main simulator UI.
 struct ContentView: View {
@@ -45,9 +46,9 @@ struct SimulatorView: View {
 
     private var header: some View {
         HStack(spacing: 12) {
-            // Unicode mouse icon — no SF Symbols (macOS 11+) needed
+            // Unicode mouse icon — Image(systemName:) requires macOS 11+
             Text("🖱")
-                .font(.title2)
+                .font(.system(size: 22)) // .title2 requires macOS 11+
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("Mouse Activity Simulator").font(.headline)
@@ -63,20 +64,7 @@ struct SimulatorView: View {
 
     private var statusBadge: some View {
         HStack(spacing: 6) {
-            ZStack {
-                if viewModel.isRunning && !viewModel.isPaused {
-                    Circle()
-                        .fill(viewModel.statusColor.opacity(0.3))
-                        .frame(width: 14, height: 14)
-                        .scaleEffect(viewModel.isRunning ? 1.3 : 1.0)
-                        .animation(
-                            Animation.easeInOut(duration: 0.9)
-                                .repeatForever(autoreverses: true),
-                            value: viewModel.isRunning
-                        )
-                }
-                Circle().fill(viewModel.statusColor).frame(width: 8, height: 8)
-            }
+            Circle().fill(viewModel.statusColor).frame(width: 8, height: 8)
             Text(viewModel.statusText)
                 .font(.system(.callout, design: .monospaced))
                 .fontWeight(.medium)
@@ -101,9 +89,12 @@ struct SimulatorView: View {
         VStack(spacing: 5) {
             Text(symbol).font(.caption).foregroundColor(.secondary)
             Text(value)
-                .font(.system(.title3, design: .monospaced))
-                .fontWeight(.semibold)
-            Text(title).font(.caption2).foregroundColor(.secondary)
+                // .title3 requires macOS 11+; use explicit size instead
+                .font(.system(size: 20, weight: .semibold, design: .monospaced))
+            Text(title)
+                // .caption2 requires macOS 11+; use explicit size instead
+                .font(.system(size: 11))
+                .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
@@ -112,9 +103,10 @@ struct SimulatorView: View {
     }
 
     // MARK: Controls box
+    // GroupBox("string") init requires macOS 12+; use label: Text(...) for 10.15
 
     private var controlsBox: some View {
-        GroupBox("Simulation Controls") {
+        GroupBox(label: Text("Simulation Controls").font(.headline)) {
             VStack(spacing: 10) {
                 Toggle("Enable Mouse Movement",
                        isOn: $viewModel.config.isMouseMovementEnabled)
@@ -137,43 +129,61 @@ struct SimulatorView: View {
     }
 
     // MARK: Timing box
+    // onChange(of:perform:) requires macOS 11+.
+    // Use custom Bindings that clamp related values on set instead.
+
+    private var minIntervalBinding: Binding<Double> {
+        Binding(
+            get: { viewModel.config.minInterval },
+            set: { v in
+                viewModel.config.minInterval = v
+                if v > viewModel.config.maxInterval { viewModel.config.maxInterval = v }
+            }
+        )
+    }
+
+    private var maxIntervalBinding: Binding<Double> {
+        Binding(
+            get: { viewModel.config.maxInterval },
+            set: { v in
+                viewModel.config.maxInterval = v
+                if v < viewModel.config.minInterval { viewModel.config.minInterval = v }
+            }
+        )
+    }
+
+    private var minMovementBinding: Binding<Double> {
+        Binding(
+            get: { viewModel.config.minMovement },
+            set: { v in
+                viewModel.config.minMovement = v
+                if v > viewModel.config.maxMovement { viewModel.config.maxMovement = v }
+            }
+        )
+    }
+
+    private var maxMovementBinding: Binding<Double> {
+        Binding(
+            get: { viewModel.config.maxMovement },
+            set: { v in
+                viewModel.config.maxMovement = v
+                if v < viewModel.config.minMovement { viewModel.config.minMovement = v }
+            }
+        )
+    }
 
     private var timingBox: some View {
-        GroupBox("Timing & Distance") {
+        GroupBox(label: Text("Timing & Distance").font(.headline)) {
             VStack(spacing: 10) {
-                labeledSlider("Min interval", value: $viewModel.config.minInterval,
+                labeledSlider("Min interval", value: minIntervalBinding,
                               in: 1...60,  step: 1, format: { "\(Int($0)) s" })
-                    .onChange(of: viewModel.config.minInterval) { v in
-                        if v > viewModel.config.maxInterval {
-                            viewModel.config.maxInterval = v
-                        }
-                    }
-
-                labeledSlider("Max interval", value: $viewModel.config.maxInterval,
+                labeledSlider("Max interval", value: maxIntervalBinding,
                               in: 1...120, step: 1, format: { "\(Int($0)) s" })
-                    .onChange(of: viewModel.config.maxInterval) { v in
-                        if v < viewModel.config.minInterval {
-                            viewModel.config.minInterval = v
-                        }
-                    }
-
                 Divider()
-
-                labeledSlider("Min movement", value: $viewModel.config.minMovement,
+                labeledSlider("Min movement", value: minMovementBinding,
                               in: 1...50,  step: 1, format: { "\(Int($0)) px" })
-                    .onChange(of: viewModel.config.minMovement) { v in
-                        if v > viewModel.config.maxMovement {
-                            viewModel.config.maxMovement = v
-                        }
-                    }
-
-                labeledSlider("Max movement", value: $viewModel.config.maxMovement,
+                labeledSlider("Max movement", value: maxMovementBinding,
                               in: 5...200, step: 5, format: { "\(Int($0)) px" })
-                    .onChange(of: viewModel.config.maxMovement) { v in
-                        if v < viewModel.config.minMovement {
-                            viewModel.config.minMovement = v
-                        }
-                    }
             }
             .padding(4)
         }
@@ -202,7 +212,7 @@ struct SimulatorView: View {
     // MARK: Hotkeys box
 
     private var hotkeysBox: some View {
-        GroupBox("Global Hotkeys  (work system-wide)") {
+        GroupBox(label: Text("Global Hotkeys  (work system-wide)").font(.headline)) {
             VStack(spacing: 6) {
                 hotkeyRow("⌃⌥⌘S", "Start simulation")
                 hotkeyRow("⌃⌥⌘X", "Stop  simulation")
@@ -229,7 +239,6 @@ struct SimulatorView: View {
 
     private var actionBar: some View {
         HStack(spacing: 12) {
-            // Reset — uses unicode arrow, no SF Symbols
             Button {
                 viewModel.resetStats()
             } label: {
@@ -267,7 +276,6 @@ struct SimulatorView: View {
                         .frame(minWidth: 80)
                 }
                 .buttonStyle(BorderedButtonStyle())
-                .accentColor(.accentColor)
             }
         }
         .padding(.horizontal, 20)

@@ -1,7 +1,8 @@
 import SwiftUI
 
 /// Shown when the app lacks Accessibility permission.
-/// Uses macOS 10.15-compatible APIs only (no SF Symbols, no markdown Text, no borderedProminent).
+/// Uses macOS 10.15-compatible APIs only:
+/// no SF Symbols, no markdown Text bold, no borderedProminent.
 struct PermissionView: View {
     @EnvironmentObject var viewModel: SimulationViewModel
 
@@ -9,13 +10,14 @@ struct PermissionView: View {
         VStack(spacing: 28) {
             Spacer()
 
-            // Lock icon via unicode — Image(systemName:) requires macOS 11
+            // Lock icon via emoji — Image(systemName:) requires macOS 11+
             Text("🔒")
                 .font(.system(size: 72))
 
             VStack(spacing: 8) {
                 Text("Accessibility Permission Required")
-                    .font(.title2).fontWeight(.semibold)
+                    // .title2 requires macOS 11+; use explicit size
+                    .font(.system(size: 22, weight: .semibold))
 
                 Text("Mouse Activity Simulator needs Accessibility access to move the cursor and simulate clicks to keep your session active.")
                     .font(.callout)

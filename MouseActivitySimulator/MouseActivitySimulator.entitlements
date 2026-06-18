@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!--
+        This app distributes OUTSIDE the Mac App Store.
+        App Sandbox must be OFF — sandboxed apps cannot post
+        synthetic HID events or use RegisterEventHotKey globally.
+    -->
+    <key>com.apple.security.app-sandbox</key>
+    <false/>
+
+    <!--
+        Hardened Runtime is ON (required for notarisation).
+        No additional entitlements are needed for CGEvent posting
+        or Carbon hotkeys — the user grants Accessibility in Settings.
+    -->
+</dict>
+</plist>

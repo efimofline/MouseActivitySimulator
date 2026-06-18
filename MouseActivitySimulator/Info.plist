@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App appears in Dock and has a standard app menu -->
+    <key>LSUIElement</key>
+    <false/>
+
+    <!-- Accessibility usage description shown in System Settings -->
+    <key>NSAccessibilityUsageDescription</key>
+    <string>Mouse Activity Simulator requires Accessibility access to move the cursor and simulate mouse clicks to keep your session active.</string>
+
+    <!-- Minimum macOS version: Sonoma 14.0 -->
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+
+    <key>CFBundleName</key>
+    <string>Mouse Activity Simulator</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>Mouse Activity Simulator</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>com.yourname.MouseActivitySimulator</string>
+
+    <key>CFBundleVersion</key>
+    <string>1</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+
+    <key>NSHighResolutionCapable</key>
+    <true/>
+
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+</dict>
+</plist>

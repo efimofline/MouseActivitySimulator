@@ -1,0 +1,381 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA00001F /* MouseActivitySimulatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000014 /* MouseActivitySimulatorApp.swift */; };
+		AA000020 /* AppDelegate.swift in Sources */             = {isa = PBXBuildFile; fileRef = AA000015 /* AppDelegate.swift */; };
+		AA000021 /* SimulationConfig.swift in Sources */        = {isa = PBXBuildFile; fileRef = AA000018 /* SimulationConfig.swift */; };
+		AA000022 /* MouseSimulationService.swift in Sources */  = {isa = PBXBuildFile; fileRef = AA000019 /* MouseSimulationService.swift */; };
+		AA000023 /* HotKeyManager.swift in Sources */           = {isa = PBXBuildFile; fileRef = AA00001A /* HotKeyManager.swift */; };
+		AA000024 /* MenuBarManager.swift in Sources */          = {isa = PBXBuildFile; fileRef = AA00001B /* MenuBarManager.swift */; };
+		AA000025 /* SimulationViewModel.swift in Sources */     = {isa = PBXBuildFile; fileRef = AA00001C /* SimulationViewModel.swift */; };
+		AA000026 /* ContentView.swift in Sources */             = {isa = PBXBuildFile; fileRef = AA00001D /* ContentView.swift */; };
+		AA000027 /* PermissionView.swift in Sources */          = {isa = PBXBuildFile; fileRef = AA00001E /* PermissionView.swift */; };
+		AA000029 /* Carbon.framework in Frameworks */           = {isa = PBXBuildFile; fileRef = AA000028 /* Carbon.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA000005 /* MouseActivitySimulator.app */     = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MouseActivitySimulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000014 /* MouseActivitySimulatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseActivitySimulatorApp.swift; sourceTree = "<group>"; };
+		AA000015 /* AppDelegate.swift */              = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA000016 /* Info.plist */                     = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA000017 /* MouseActivitySimulator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MouseActivitySimulator.entitlements; sourceTree = "<group>"; };
+		AA000018 /* SimulationConfig.swift */         = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationConfig.swift; sourceTree = "<group>"; };
+		AA000019 /* MouseSimulationService.swift */   = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseSimulationService.swift; sourceTree = "<group>"; };
+		AA00001A /* HotKeyManager.swift */            = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyManager.swift; sourceTree = "<group>"; };
+		AA00001B /* MenuBarManager.swift */           = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
+		AA00001C /* SimulationViewModel.swift */      = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationViewModel.swift; sourceTree = "<group>"; };
+		AA00001D /* ContentView.swift */              = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AA00001E /* PermissionView.swift */           = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionView.swift; sourceTree = "<group>"; };
+		AA000028 /* Carbon.framework */               = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA000007 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000029 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA000002 /* root */ = {
+			isa = PBXGroup;
+			children = (
+				AA00000F /* MouseActivitySimulator */,
+				AA00002A /* Frameworks */,
+				AA000004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA000004 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA000005 /* MouseActivitySimulator.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AA00000F /* MouseActivitySimulator */ = {
+			isa = PBXGroup;
+			children = (
+				AA000014 /* MouseActivitySimulatorApp.swift */,
+				AA000015 /* AppDelegate.swift */,
+				AA000016 /* Info.plist */,
+				AA000017 /* MouseActivitySimulator.entitlements */,
+				AA000010 /* Models */,
+				AA000011 /* Services */,
+				AA000012 /* ViewModels */,
+				AA000013 /* Views */,
+			);
+			path = MouseActivitySimulator;
+			sourceTree = "<group>";
+		};
+		AA000010 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA000018 /* SimulationConfig.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AA000011 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA000019 /* MouseSimulationService.swift */,
+				AA00001A /* HotKeyManager.swift */,
+				AA00001B /* MenuBarManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AA000012 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				AA00001C /* SimulationViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		AA000013 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA00001D /* ContentView.swift */,
+				AA00001E /* PermissionView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AA00002A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AA000028 /* Carbon.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA000003 /* MouseActivitySimulator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA00000A /* Build configuration list for PBXNativeTarget "MouseActivitySimulator" */;
+			buildPhases = (
+				AA000006 /* Sources */,
+				AA000007 /* Frameworks */,
+				AA000008 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MouseActivitySimulator;
+			productName = MouseActivitySimulator;
+			productReference = AA000005 /* MouseActivitySimulator.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					AA000003 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = AA000009 /* Build configuration list for PBXProject "MouseActivitySimulator" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA000002;
+			productRefGroup = AA000004 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA000003 /* MouseActivitySimulator */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA000008 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA000006 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA00001F /* MouseActivitySimulatorApp.swift in Sources */,
+				AA000020 /* AppDelegate.swift in Sources */,
+				AA000021 /* SimulationConfig.swift in Sources */,
+				AA000022 /* MouseSimulationService.swift in Sources */,
+				AA000023 /* HotKeyManager.swift in Sources */,
+				AA000024 /* MenuBarManager.swift in Sources */,
+				AA000025 /* SimulationViewModel.swift in Sources */,
+				AA000026 /* ContentView.swift in Sources */,
+				AA000027 /* PermissionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA00000B /* Debug (Project) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AA00000C /* Release (Project) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		AA00000D /* Debug (Target) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MouseActivitySimulator/MouseActivitySimulator.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MouseActivitySimulator/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.MouseActivitySimulator;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AA00000E /* Release (Target) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MouseActivitySimulator/MouseActivitySimulator.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MouseActivitySimulator/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.MouseActivitySimulator;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA000009 /* Build configuration list for PBXProject "MouseActivitySimulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00000B /* Debug */,
+				AA00000C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA00000A /* Build configuration list for PBXNativeTarget "MouseActivitySimulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00000D /* Debug */,
+				AA00000E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = AA000001 /* Project object */;
+}

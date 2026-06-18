@@ -1,6 +1,7 @@
 import SwiftUI
 
 /// Shown when the app lacks Accessibility permission.
+/// Uses macOS 10.15-compatible APIs only (no SF Symbols, no markdown Text, no borderedProminent).
 struct PermissionView: View {
     @EnvironmentObject var viewModel: SimulationViewModel
 
@@ -8,19 +9,15 @@ struct PermissionView: View {
         VStack(spacing: 28) {
             Spacer()
 
-            Image(systemName: "lock.shield.fill")
+            // Lock icon via unicode — Image(systemName:) requires macOS 11
+            Text("🔒")
                 .font(.system(size: 72))
-                .foregroundColor(.orange)
-                .symbolRenderingMode(.multicolor)
 
             VStack(spacing: 8) {
                 Text("Accessibility Permission Required")
                     .font(.title2).fontWeight(.semibold)
 
-                Text("""
-                    Mouse Activity Simulator needs Accessibility access \
-                    to move the cursor and simulate clicks on your behalf.
-                    """)
+                Text("Mouse Activity Simulator needs Accessibility access to move the cursor and simulate clicks to keep your session active.")
                     .font(.callout)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -30,10 +27,10 @@ struct PermissionView: View {
 
             // Step-by-step instructions
             VStack(alignment: .leading, spacing: 10) {
-                step("1", text: "Click **Open Settings** below")
-                step("2", text: "Go to **Privacy & Security → Accessibility**")
-                step("3", text: "Enable **Mouse Activity Simulator** in the list")
-                step("4", text: "Return here and click **Check Again**")
+                step("1", "Click \"Open Settings\" below")
+                step("2", "Go to Privacy & Security → Accessibility")
+                step("3", "Enable Mouse Activity Simulator in the list")
+                step("4", "Return here and click \"Check Again\"")
             }
             .padding(16)
             .background(Color(NSColor.controlBackgroundColor))
@@ -44,16 +41,16 @@ struct PermissionView: View {
                 Button {
                     viewModel.checkPermission()
                 } label: {
-                    Label("Check Again", systemImage: "arrow.clockwise")
+                    HStack(spacing: 4) { Text("↺"); Text("Check Again") }
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(BorderedButtonStyle())
 
                 Button {
                     viewModel.openAccessibilitySettings()
                 } label: {
-                    Label("Open Settings", systemImage: "gear")
+                    HStack(spacing: 4) { Text("⚙"); Text("Open Settings") }
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(BorderedButtonStyle())
             }
 
             Spacer()
@@ -62,8 +59,7 @@ struct PermissionView: View {
         .padding()
     }
 
-    @ViewBuilder
-    private func step(_ number: String, text: LocalizedStringKey) -> some View {
+    private func step(_ number: String, _ text: String) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Text(number)
                 .font(.system(.callout, design: .monospaced)).fontWeight(.bold)

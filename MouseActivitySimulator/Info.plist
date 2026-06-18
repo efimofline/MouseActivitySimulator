@@ -10,9 +10,9 @@
     <key>NSAccessibilityUsageDescription</key>
     <string>Mouse Activity Simulator requires Accessibility access to move the cursor and simulate mouse clicks to keep your session active.</string>
 
-    <!-- Minimum macOS version: Sonoma 14.0 -->
+    <!-- Minimum macOS version: Catalina 10.15 -->
     <key>LSMinimumSystemVersion</key>
-    <string>14.0</string>
+    <string>10.15</string>
 
     <key>CFBundleName</key>
     <string>Mouse Activity Simulator</string>

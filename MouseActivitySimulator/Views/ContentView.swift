@@ -135,13 +135,13 @@ struct SimulatorView: View {
             VStack(spacing: 10) {
                 labeledSlider("Min interval",  value: $viewModel.config.minInterval,
                               in: 1...60,   step: 1, format: { "\(Int($0)) s" })
-                    .onChange(of: viewModel.config.minInterval) { v in
+                    .onChange(of: viewModel.config.minInterval) { _, v in
                         if v > viewModel.config.maxInterval { viewModel.config.maxInterval = v }
                     }
 
                 labeledSlider("Max interval",  value: $viewModel.config.maxInterval,
                               in: 1...120,  step: 1, format: { "\(Int($0)) s" })
-                    .onChange(of: viewModel.config.maxInterval) { v in
+                    .onChange(of: viewModel.config.maxInterval) { _, v in
                         if v < viewModel.config.minInterval { viewModel.config.minInterval = v }
                     }
 
@@ -149,13 +149,13 @@ struct SimulatorView: View {
 
                 labeledSlider("Min movement",  value: $viewModel.config.minMovement,
                               in: 1...50,   step: 1, format: { "\(Int($0)) px" })
-                    .onChange(of: viewModel.config.minMovement) { v in
+                    .onChange(of: viewModel.config.minMovement) { _, v in
                         if v > viewModel.config.maxMovement { viewModel.config.maxMovement = v }
                     }
 
                 labeledSlider("Max movement",  value: $viewModel.config.maxMovement,
                               in: 5...200,  step: 5, format: { "\(Int($0)) px" })
-                    .onChange(of: viewModel.config.maxMovement) { v in
+                    .onChange(of: viewModel.config.maxMovement) { _, v in
                         if v < viewModel.config.minMovement { viewModel.config.minMovement = v }
                     }
             }

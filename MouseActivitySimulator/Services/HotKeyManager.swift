@@ -41,19 +41,17 @@ final class HotKeyManager {
 
         // The callback must be a @convention(c) closure with no captures from
         // the enclosing scope; we thread context through the userInfo pointer.
+        // CGEventTapCallBack: event param is non-optional CGEvent, not CGEvent?
         eventTap = CGEvent.tapCreate(
             tap:              .cgSessionEventTap,
             place:            .headInsertEventTap,
-            options:          .listenOnly,           // observe, don't swallow
+            options:          .listenOnly,
             eventsOfInterest: mask,
             callback: { (_, type, event, userInfo) -> Unmanaged<CGEvent>? in
-                guard let event,
-                      let userInfo,
-                      type == .keyDown else {
-                    return event.map(Unmanaged.passRetained)
+                guard let userInfo, type == .keyDown else {
+                    return Unmanaged.passRetained(event)
                 }
 
-                // Require exactly ⌃⌥⌘ (no Shift)
                 let f = event.flags
                 guard f.contains(.maskControl),
                       f.contains(.maskAlternate),

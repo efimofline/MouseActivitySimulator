@@ -48,6 +48,7 @@ jobs:
           -destination   "generic/platform=macOS" \
           -archivePath   "$RUNNER_TEMP/$APP_NAME.xcarchive" \
           MACOSX_DEPLOYMENT_TARGET=10.15 \
+          ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES=YES \
           ONLY_ACTIVE_ARCH=NO \
           CODE_SIGN_IDENTITY="-" \
           CODE_SIGNING_REQUIRED=YES \

@@ -85,6 +85,41 @@ jobs:
         echo "App: $RUNNER_TEMP/export/$APP_NAME.app"
         du -sh "$RUNNER_TEMP/export/$APP_NAME.app"
 
+    - name: Embed Swift Concurrency for macOS 10.15
+      run: |
+        # libswiftConcurrency.dylib appeared in macOS 12.
+        # On macOS 10.15 it must be embedded inside Contents/Frameworks/.
+        # Xcode 16 does NOT embed it automatically for macOS targets, so we
+        # copy it from the active Xcode toolchain (universal fat binary).
+        APP_PATH="$RUNNER_TEMP/export/$APP_NAME.app"
+        FRAMEWORKS="$APP_PATH/Contents/Frameworks"
+        TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain"
+        SWIFT_MACOS="$TOOLCHAIN/usr/lib/swift/macosx"
+
+        echo "=== Embedded dylibs BEFORE ==="
+        find "$APP_PATH" -name "*.dylib" | sort || echo "(none)"
+
+        for LIB in libswiftConcurrency.dylib libswift_Concurrency.dylib; do
+          SRC="$SWIFT_MACOS/$LIB"
+          DST="$FRAMEWORKS/$LIB"
+          if [ -f "$SRC" ] && [ ! -f "$DST" ]; then
+            mkdir -p "$FRAMEWORKS"
+            cp "$SRC" "$DST"
+            codesign -f -s - "$DST"
+            echo "Embedded $LIB ($(du -sh "$DST" | cut -f1))"
+          elif [ -f "$DST" ]; then
+            echo "$LIB already present — skipping"
+          else
+            echo "WARNING: $SRC not found in toolchain, skipping"
+          fi
+        done
+
+        # Re-sign the app bundle so the new Frameworks dir is included
+        codesign -f -s - "$APP_PATH"
+
+        echo "=== Embedded dylibs AFTER ==="
+        find "$APP_PATH" -name "*.dylib" | sort
+
     - name: Create DMG
       run: |
         STAGING="$RUNNER_TEMP/dmg_staging"

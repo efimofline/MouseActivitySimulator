@@ -87,38 +87,45 @@ jobs:
 
     - name: Embed Swift Concurrency for macOS 10.15
       run: |
-        # libswiftConcurrency.dylib appeared in macOS 12.
-        # On macOS 10.15 it must be embedded inside Contents/Frameworks/.
-        # Xcode 16 does NOT embed it automatically for macOS targets, so we
-        # copy it from the active Xcode toolchain (universal fat binary).
+        # libswiftConcurrency.dylib is part of the macOS 12 OS; it must be
+        # manually embedded for deployment targets < 12.
+        # Xcode 16 does NOT embed it via ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES.
         APP_PATH="$RUNNER_TEMP/export/$APP_NAME.app"
         FRAMEWORKS="$APP_PATH/Contents/Frameworks"
-        TOOLCHAIN="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain"
-        SWIFT_MACOS="$TOOLCHAIN/usr/lib/swift/macosx"
 
         echo "=== Embedded dylibs BEFORE ==="
         find "$APP_PATH" -name "*.dylib" | sort || echo "(none)"
 
-        for LIB in libswiftConcurrency.dylib libswift_Concurrency.dylib; do
-          SRC="$SWIFT_MACOS/$LIB"
-          DST="$FRAMEWORKS/$LIB"
-          if [ -f "$SRC" ] && [ ! -f "$DST" ]; then
-            mkdir -p "$FRAMEWORKS"
-            cp "$SRC" "$DST"
-            codesign -f -s - "$DST"
-            echo "Embedded $LIB ($(du -sh "$DST" | cut -f1))"
-          elif [ -f "$DST" ]; then
-            echo "$LIB already present — skipping"
-          else
-            echo "WARNING: $SRC not found in toolchain, skipping"
-          fi
-        done
+        echo "=== Searching for libswiftConcurrency.dylib in Xcode/toolchain ==="
+        # Search across all known locations — path changed between Xcode versions
+        FOUND=$(find "$(xcode-select -p)" /Library/Developer/CommandLineTools \
+          -name "libswiftConcurrency.dylib" 2>/dev/null \
+          | grep "/macosx/" | head -5)
+        echo "Candidates found:"
+        echo "$FOUND"
 
-        # Re-sign the app bundle so the new Frameworks dir is included
+        # Pick the first macosx/ candidate (prefer toolchain over SDK)
+        SRC=$(echo "$FOUND" | grep -v "/SDKs/" | head -1)
+        [ -z "$SRC" ] && SRC=$(echo "$FOUND" | head -1)
+
+        if [ -z "$SRC" ]; then
+          echo "ERROR: libswiftConcurrency.dylib not found anywhere in Xcode installation"
+          find "$(xcode-select -p)" -name "libswift*.dylib" 2>/dev/null | head -20
+          exit 1
+        fi
+
+        echo "Using: $SRC ($(du -sh "$SRC" | cut -f1))"
+
+        mkdir -p "$FRAMEWORKS"
+        cp "$SRC" "$FRAMEWORKS/libswiftConcurrency.dylib"
+        codesign -f -s - "$FRAMEWORKS/libswiftConcurrency.dylib"
+
+        # Re-sign the whole bundle so the new Frameworks dir is included
         codesign -f -s - "$APP_PATH"
 
         echo "=== Embedded dylibs AFTER ==="
         find "$APP_PATH" -name "*.dylib" | sort
+        du -sh "$APP_PATH"
 
     - name: Create DMG
       run: |
